@@ -1,0 +1,16 @@
+feature,coefficient,odds_ratio
+From: Bihar,2.2156,9.167
+From: Assam,1.9524,7.046
+From: Jharkhand,1.6708,5.316
+From: West Bengal,1.6657,5.29
+From: Maharashtra,1.54,4.665
+From: Himachal Pradesh,1.3267,3.768
+From: Madhya Pradesh,1.1827,3.263
+From: Orissa,1.1462,3.146
+From: Uttarakhand,1.02,2.773
+From: Uttar Pradesh,0.9968,2.71
+From: Other states,0.6549,1.925
+Route: Carting,0.6162,1.852
+From: Telangana,0.5611,1.753
+Starts: Early morning (4-9h),0.5367,1.71
+From: Haryana,0.5291,1.697

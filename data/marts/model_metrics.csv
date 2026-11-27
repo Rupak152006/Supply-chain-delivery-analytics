@@ -1,0 +1,11 @@
+metric,value
+train_legs,18947
+test_legs,7421
+test_breach_rate,0.4927
+roc_auc,0.7115
+pr_auc,0.6829
+top_decile_breach_rate,0.7803
+top_decile_lift,1.58
+train_period,trips before 2018-09-27
+test_period,trips from 2018-09-27
+baseline,"FTL, Night (0-4h), Karnataka, Delivery centre, Wednesday"

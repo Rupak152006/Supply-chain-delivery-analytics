@@ -1,0 +1,24 @@
+facility,city,state,facility_type,legs,sla_rate,avg_handling_min,avg_excess_min
+Gurgaon_Bilaspur_HB (Haryana),Gurgaon,Haryana,Hub,1063,0.604,172.8,399.3
+Bhiwandi_Mankoli_HB (Maharashtra),Bhiwandi,Maharashtra,Hub,821,0.2972,172.6,223.4
+Bangalore_Nelmngla_H (Karnataka),Bangalore,Karnataka,Hub,768,0.7148,175.4,205.5
+Bengaluru_Bomsndra_HB (Karnataka),Bengaluru,Karnataka,Hub,466,0.6652,101.0,47.1
+Pune_Tathawde_H (Maharashtra),Pune,Maharashtra,Hub,403,0.531,142.1,185.3
+Chandigarh_Mehmdpur_H (Punjab),Chandigarh,Punjab,Hub,370,0.6649,195.5,116.5
+Bengaluru_KGAirprt_HB (Karnataka),Bengaluru,Karnataka,Hub,331,0.6163,71.9,48.5
+Hyderabad_Shamshbd_H (Telangana),Hyderabad,Telangana,Hub,329,0.5805,184.1,182.5
+MAA_Poonamallee_HB (Tamil Nadu),Maa,Tamil Nadu,Hub,300,0.5333,172.5,78.6
+Mumbai Hub (Maharashtra),Mumbai,Maharashtra,Hub,300,0.13,77.4,47.0
+Ahmedabad_East_H_1 (Gujarat),Ahmedabad,Gujarat,Other,280,0.5714,180.6,109.7
+Kolkata_Dankuni_HB (West Bengal),Kolkata,West Bengal,Hub,262,0.2023,155.1,268.2
+Delhi_Airport_H (Delhi),Delhi,Delhi,Hub,256,0.4219,168.0,175.3
+Sonipat_Kundli_H (Haryana),Sonipat,Haryana,Hub,245,0.6449,180.2,114.7
+Kanpur_Central_H_6 (Uttar Pradesh),Kanpur,Uttar Pradesh,Other,220,0.5682,167.2,117.5
+Muzaffrpur_Bbganj_I (Bihar),Muzaffrpur,Bihar,Other,178,0.3202,80.8,77.2
+Del_Okhla_PC (Delhi),Del,Delhi,Delivery centre,172,0.6628,84.8,40.4
+FBD_Balabhgarh_DPC (Haryana),Fbd,Haryana,Delivery centre,169,0.6095,43.3,34.5
+Delhi_Gateway_HB (Delhi),Delhi,Delhi,Hub,160,0.725,153.4,53.7
+Jaipur_Central_I_7 (Rajasthan),Jaipur,Rajasthan,Other,150,0.4133,46.6,32.6
+Ludhiana_MilrGanj_HB (Punjab),Ludhiana,Punjab,Hub,128,0.6016,112.8,59.0
+Bhopal_Trnsport_H (Madhya Pradesh),Bhopal,Madhya Pradesh,Hub,123,0.2602,112.3,257.5
+Chennai_Hub (Tamil Nadu),Chennai,Tamil Nadu,Hub,123,0.4553,41.1,30.3

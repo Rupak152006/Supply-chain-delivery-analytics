@@ -1,0 +1,7 @@
+__pycache__/
+.pytest_cache/
+.venv/
+*.pyc
+# Rebuilt by run_pipeline.py (download_data.py fetches and verifies the raw file)
+data/raw/*.csv
+data/processed/*.db

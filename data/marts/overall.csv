@@ -1,0 +1,2 @@
+legs,trips,facilities,sla_rate,interstate_share,ftl_share,planned_km,avg_handling_min,first_date,last_date,sla_factor,median_delay_ratio
+26368,14817,1657,0.5073,0.169,0.5286,3038986.0,97.6,2018-09-12,2018-10-03,2.0,2.0

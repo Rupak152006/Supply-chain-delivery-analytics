@@ -1,0 +1,11 @@
+check,rows_affected,action
+raw checkpoint rows,144867,loaded
+exact duplicate checkpoint rows,0,dropped
+unparseable timestamps,0,rows dropped
+missing source_name,293,"filled 0 from centre code, rest 'Unknown'"
+missing destination_name,261,"filled 0 from centre code, rest 'Unknown'"
+non-positive time or distance,0,dropped
+legs built (trip + source -> destination),26368,aggregated
+legs ending before they start,0,dropped
+scan-to-scan shorter than transit time,0,handling time set to 0
+legs over 10x the OSRM estimate,361,kept; medians used in reporting

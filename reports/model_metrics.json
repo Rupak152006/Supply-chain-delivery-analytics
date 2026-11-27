@@ -1,0 +1,9 @@
+{
+  "train_legs": 18947,
+  "test_legs": 7421,
+  "test_breach_rate": 0.4927,
+  "roc_auc": 0.7115,
+  "pr_auc": 0.6829,
+  "top_decile_breach_rate": 0.7803,
+  "top_decile_lift": 1.58
+}

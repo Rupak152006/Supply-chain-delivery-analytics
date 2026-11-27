@@ -1,0 +1,529 @@
+<meta name="dash-one-writer">
+<meta name="dash-form" content="dashboard">
+<style>
+  .sc { display: grid; gap: var(--cds-gap-xl); font-family: var(--font-anthropic-sans); color: var(--color-fg); }
+  .sc-head { display: grid; gap: var(--cds-gap-sm); max-width: 74ch; }
+  .sc-eyebrow { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); letter-spacing: .06em; text-transform: uppercase; margin: 0; }
+  .sc-title { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0; text-wrap: balance; }
+  .sc-lede { margin: 0; line-height: 1.55; }
+  .sc-lede b { font-weight: var(--cds-font-weight-medium); font-variant-numeric: tabular-nums; }
+  .sc-source { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; line-height: 1.5; }
+
+  .sc-tiles { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
+  .sc-tile { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: grid; gap: var(--cds-gap-xs); align-content: start; min-width: 0; }
+  .sc-tile-label { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; }
+  .sc-tile-val { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.15; min-height: 1.15em; }
+  .sc-tile-note { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; }
+  .sc-window { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; }
+
+  .sc-section { display: grid; gap: var(--cds-gap-md); }
+  .sc-section-title { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+  .sc-grid { display: grid; gap: var(--cds-gap-md); grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); }
+  .sc-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: grid; gap: var(--cds-gap-sm); align-content: start; min-width: 0; }
+  .sc-card-head { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: baseline; justify-content: space-between; }
+  .sc-card-title { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); margin: 0; }
+  .sc-note { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: 0; line-height: 1.5; }
+  .sc-note b { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); font-variant-numeric: tabular-nums; }
+
+  .sc-legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .sc-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sc-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; flex: none; background: var(--cds-chart-muted); }
+  .sc-sw-line { height: 3px; width: 14px; border-radius: 2px; }
+  .sc-sw-ref { height: 0; width: 14px; border-top: 2px dashed var(--cds-chart-reference); background: none; border-radius: 0; }
+
+  .sc-chart { position: relative; min-height: 250px; }
+  .sc-chart svg { display: block; overflow: visible; }
+  .sc-axis text { fill: var(--cds-text-secondary); font-size: var(--cds-font-size-caption); font-family: var(--font-anthropic-sans); }
+  .sc-axis .domain { stroke: var(--cds-chart-axis); }
+  .sc-axis .tick line { stroke: var(--cds-chart-grid); }
+  .sc-guide { stroke: var(--cds-chart-reference); stroke-dasharray: 3 3; }
+  .sc-ref { stroke: var(--cds-chart-reference); stroke-dasharray: 4 4; }
+  .sc-ref-label { fill: var(--cds-text-secondary); font-size: var(--cds-font-size-caption); font-family: var(--font-anthropic-sans); }
+
+  .sc-tip { position: absolute; z-index: 5; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover); border-radius: var(--cds-radius); padding: var(--cds-pad-sm) var(--cds-pad-md); font-size: var(--cds-font-size-caption); display: grid; gap: 2px; white-space: nowrap; }
+  .sc-tip-row { display: flex; align-items: center; gap: 6px; color: var(--cds-text-secondary); }
+  .sc-tip-row b { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); margin-left: auto; padding-left: 12px; font-variant-numeric: tabular-nums; }
+  .sc-tip-row:first-child { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+
+  .sc-bars { display: grid; gap: 6px; min-height: 200px; align-content: start; }
+  .sc-bar-row { display: grid; grid-template-columns: minmax(0, 9.5rem) minmax(40px, 1fr) auto; gap: var(--cds-gap-sm); align-items: center; font-size: var(--cds-font-size-caption); }
+  .sc-bar-label { overflow-wrap: anywhere; line-height: 1.3; }
+  .sc-bar-track { position: relative; height: 12px; background: color-mix(in srgb, var(--cds-chart-grid) 55%, transparent); border-radius: 2px; overflow: hidden; }
+  .sc-bar-fill { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 2px; }
+  .sc-bar-val { font-variant-numeric: tabular-nums; text-align: right; min-width: 3.5em; }
+  .sc-bar-sub { color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+  .sc-div-mid { position: absolute; top: -2px; bottom: -2px; left: 50%; width: 1px; background: var(--cds-chart-reference); }
+  .sc-bar-ref { position: absolute; top: -3px; bottom: -3px; width: 0; border-left: 2px dashed var(--cds-chart-reference); }
+
+  .sc-table-wrap { overflow-x: auto; }
+  .sc-table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+  .sc-table th { text-align: right; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); padding: 6px 8px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .sc-table td { text-align: right; padding: 7px 8px; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .sc-table th.l, .sc-table td.l { text-align: left; }
+  .sc-pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-weight: var(--cds-font-weight-medium); }
+  .sc-pill.ok { color: var(--color-ok); background: color-mix(in srgb, var(--color-ok) 14%, transparent); }
+  .sc-pill.warn { color: var(--color-warn); background: color-mix(in srgb, var(--color-warn) 16%, transparent); }
+  .sc-pill.bad { color: var(--color-bad); background: color-mix(in srgb, var(--color-bad) 14%, transparent); }
+  .sc-scroll { max-height: 420px; overflow: auto; }
+
+  .sc-defs summary { cursor: pointer; font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); }
+  .sc-defs dl { display: grid; grid-template-columns: minmax(0, 12rem) minmax(0, 1fr); gap: var(--cds-gap-sm) var(--cds-gap-md); font-size: var(--cds-font-size-caption); margin: var(--cds-gap-md) 0 0; }
+  .sc-defs dt { font-weight: var(--cds-font-weight-medium); }
+  .sc-defs dd { margin: 0; color: var(--color-fg-muted); line-height: 1.5; }
+  @media (max-width: 520px) { .sc-defs dl { grid-template-columns: 1fr; } .sc-bar-row { grid-template-columns: minmax(0, 7rem) minmax(30px, 1fr) auto; } }
+  @media print { .sc-scroll { max-height: none; } }
+</style>
+
+<div class="sc">
+  <header class="sc-head" id="overview">
+    <p class="sc-eyebrow">India · Line-haul and last-mile legs · Delhivery public trip data</p>
+    <h1 class="sc-title">Delhivery Delivery Performance</h1>
+    <p class="sc-lede" data-read lang="en">Only <b data-draw="lede-sla" data-source="overall" data-field="sla_rate" data-row="0">—</b> of <b data-draw="lede-legs" data-source="overall" data-field="legs" data-row="0">—</b> legs finished within <span data-draw="lede-factor" data-source="overall" data-field="sla_factor" data-row="0">—</span> their planned drive time, and the typical leg took <b data-draw="lede-ratio" data-source="overall" data-field="median_delay_ratio" data-row="0">—</b> the routing estimate. Carting legs meet the target <b data-draw="lede-cart" data-source="route_type" data-field="sla_rate" data-where="route_type=Carting">—</b> of the time against <b data-draw="lede-ftl" data-source="route_type" data-field="sla_rate" data-where="route_type=FTL">—</b> for full truckloads. By origin state, the rate ranges from <b data-draw="lede-worst-rate">—</b> in <span data-draw="lede-worst">—</span> to <b data-draw="lede-best-rate">—</b> in <span data-draw="lede-best">—</span>.</p>
+    <p class="sc-source">Real data: Delhivery's public trip dataset, <span data-draw="win-range" data-source="overall" data-field="first_date" data-row="0">—</span>, cleaned and aggregated from 144,867 checkpoint rows by the project pipeline. The data has no promised delivery date, so a leg counts as on time when its actual transit time is within <span data-draw="win-factor" data-source="overall" data-field="sla_factor" data-row="0">—</span> the OSRM routing-engine estimate.</p>
+  </header>
+
+  <section class="sc-section" id="kpis" aria-label="Headline KPIs">
+    <div class="sc-tiles">
+      <div class="sc-tile" id="tile-sla">
+        <p class="sc-tile-label">Legs within SLA</p>
+        <div class="sc-tile-val dash-skeleton" data-draw="tile" data-source="overall" data-field="sla_rate" data-row="0"></div>
+        <p class="sc-tile-note">Actual time at most <span data-draw="tile-factor" data-source="overall" data-field="sla_factor" data-row="0">—</span> plan</p>
+      </div>
+      <div class="sc-tile" id="tile-ratio">
+        <p class="sc-tile-label">Median actual vs planned time</p>
+        <div class="sc-tile-val dash-skeleton" data-draw="tile" data-source="overall" data-field="median_delay_ratio" data-row="0"></div>
+        <p class="sc-tile-note">1.0× would be exactly on plan</p>
+      </div>
+      <div class="sc-tile" id="tile-legs">
+        <p class="sc-tile-label">Legs analysed</p>
+        <div class="sc-tile-val dash-skeleton" data-draw="tile" data-source="overall" data-field="legs" data-row="0"></div>
+        <p class="sc-tile-note"><span data-draw="tile-trips" data-source="overall" data-field="trips" data-row="0">—</span> trips</p>
+      </div>
+      <div class="sc-tile" id="tile-km">
+        <p class="sc-tile-label">Planned distance</p>
+        <div class="sc-tile-val dash-skeleton" data-draw="tile" data-source="overall" data-field="planned_km" data-row="0"></div>
+        <p class="sc-tile-note">Sum of OSRM route kilometres</p>
+      </div>
+      <div class="sc-tile" id="tile-handling">
+        <p class="sc-tile-label">Average time at facilities</p>
+        <div class="sc-tile-val dash-skeleton" data-draw="tile" data-source="overall" data-field="avg_handling_min" data-row="0"></div>
+        <p class="sc-tile-note">Scan-to-scan time not spent moving</p>
+      </div>
+      <div class="sc-tile" id="tile-ftl">
+        <p class="sc-tile-label">Full-truckload share</p>
+        <div class="sc-tile-val dash-skeleton" data-draw="tile" data-source="overall" data-field="ftl_share" data-row="0"></div>
+        <p class="sc-tile-note"><span data-draw="tile-inter" data-source="overall" data-field="interstate_share" data-row="0">—</span> of legs cross a state line</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sc-section" id="trend-section">
+    <h2 class="sc-section-title">Daily performance</h2>
+    <div class="sc-card" id="daily-card">
+      <h3 class="sc-card-title">Share of legs within SLA, by trip creation date</h3>
+      <div class="sc-legend">
+        <span><i class="sc-sw sc-sw-line" data-series="0"></i>Within SLA</span>
+        <span><i class="sc-sw"></i>Legs created (right scale)</span>
+      </div>
+      <div class="sc-chart dash-skeleton" id="daily" data-draw="daily" data-source="daily" data-fetchpriority="high"></div>
+      <p class="sc-note">Three weeks of data is too short for seasonality; it shows how stable day-to-day performance is.</p>
+    </div>
+  </section>
+
+  <section class="sc-section" id="route-section">
+    <h2 class="sc-section-title">Route type and distance</h2>
+    <div class="sc-grid">
+      <div class="sc-card" id="route-card">
+        <h3 class="sc-card-title">Full truckload vs carting</h3>
+        <div class="sc-table-wrap">
+          <table class="sc-table" data-source="route_type" data-row-key="route_type">
+            <thead><tr><th class="l" data-field="route_type">Route type</th><th data-field="legs">Legs</th><th data-field="sla_rate">Within SLA</th><th data-field="median_actual_time_min">Median actual (min)</th><th data-field="median_osrm_time_min">Median plan (min)</th><th data-field="avg_distance_km">Avg distance (km)</th><th data-field="avg_handling_min">Avg at facilities (min)</th></tr></thead>
+            <tbody data-draw="route-rows"></tbody>
+          </table>
+        </div>
+        <p class="sc-note">Carting legs are short urban and local moves; FTL legs are dedicated full trucks between hubs.</p>
+      </div>
+      <div class="sc-card" id="band-card">
+        <h3 class="sc-card-title">Within SLA by planned distance</h3>
+        <div class="sc-legend">
+          <span><i class="sc-sw" data-series="0"></i>FTL</span>
+          <span><i class="sc-sw" data-series="1"></i>Carting</span>
+        </div>
+        <div class="sc-chart dash-skeleton" id="bands" data-draw="bands" data-source="distance_band"></div>
+        <p class="sc-note">Groups with fewer than <span data-draw="min-band">—</span> legs are left out.</p>
+      </div>
+    </div>
+    <div class="sc-card" id="hour-card">
+      <h3 class="sc-card-title">Within SLA by hour the leg starts</h3>
+      <div class="sc-legend">
+        <span><i class="sc-sw" data-series="0"></i>Within SLA</span>
+        <span><i class="sc-sw sc-sw-ref"></i>All legs</span>
+      </div>
+      <div class="sc-chart dash-skeleton" id="hours" data-draw="hours" data-source="hour overall"></div>
+      <p class="sc-note">Hours are as recorded in the data's leg start timestamps.</p>
+    </div>
+  </section>
+
+  <section class="sc-section" id="geo-section">
+    <h2 class="sc-section-title">Where legs run late</h2>
+    <div class="sc-grid">
+      <div class="sc-card" id="state-card">
+        <h3 class="sc-card-title">Within SLA by origin state</h3>
+        <div class="sc-bars dash-skeleton" id="states" data-draw="states" data-source="state overall"></div>
+        <p class="sc-note">Dashed line: all legs. Small number: legs from that state. States with fewer than 100 legs are left out.</p>
+      </div>
+      <div class="sc-card" id="corridor-card">
+        <div class="sc-card-head">
+          <h3 class="sc-card-title">Busiest state-to-state corridors</h3>
+          <p class="sc-note">Pill: <span data-draw="thresholds">—</span></p>
+        </div>
+        <div class="sc-table-wrap sc-scroll">
+          <table class="sc-table" data-source="corridor" data-row-key="source_state,destination_state">
+            <thead><tr><th class="l" data-field="source_state">From</th><th class="l" data-field="destination_state">To</th><th data-field="legs">Legs</th><th data-field="sla_rate">Within SLA</th><th data-field="avg_distance_km">Avg km</th><th data-field="avg_excess_min">Avg extra min</th></tr></thead>
+            <tbody data-draw="corridor-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="sc-card" id="hub-card">
+      <h3 class="sc-card-title">Busiest origin facilities</h3>
+      <div class="sc-table-wrap">
+        <table class="sc-table" data-source="hub" data-row-key="facility">
+          <thead><tr><th class="l" data-field="facility">Facility</th><th class="l" data-field="facility_type">Type</th><th data-field="legs">Legs</th><th data-field="sla_rate">Within SLA</th><th data-field="avg_excess_min">Avg extra min</th><th data-field="avg_handling_min">Avg at facilities (min)</th></tr></thead>
+          <tbody data-draw="hub-rows"></tbody>
+        </table>
+      </div>
+      <p class="sc-note">Facilities with at least 100 outbound legs, sorted from least to most reliable. Type is read from the facility code in its name (HB/H = hub, D/DC/DPC/PC = delivery centre).</p>
+    </div>
+  </section>
+
+  <section class="sc-section" id="model-section">
+    <h2 class="sc-section-title">Predicting late legs at dispatch</h2>
+    <div class="sc-card" id="drivers-card">
+      <h3 class="sc-card-title">What raises the odds of missing the SLA</h3>
+      <p class="sc-note">Odds compared with a typical leg (<span data-draw="mm-base" data-source="model_metrics" data-field="value" data-where="metric=baseline">—</span>). Right of centre raises the risk, left lowers it.</p>
+      <div class="sc-bars dash-skeleton" id="drivers" data-draw="drivers" data-source="risk_drivers"></div>
+      <p class="sc-note">Logistic regression trained on <b data-draw="mm-train" data-source="model_metrics" data-field="value" data-where="metric=train_period">—</b> and tested on <b data-draw="mm-test" data-source="model_metrics" data-field="value" data-where="metric=test_period">—</b>: ROC AUC <b data-draw="mm-auc" data-source="model_metrics" data-field="value" data-where="metric=roc_auc">—</b>. The riskiest tenth of test legs missed the SLA <b data-draw="mm-top" data-source="model_metrics" data-field="value" data-where="metric=top_decile_breach_rate">—</b> of the time, against <b data-draw="mm-rate" data-source="model_metrics" data-field="value" data-where="metric=test_breach_rate">—</b> overall.</p>
+    </div>
+  </section>
+
+  <details class="sc-defs" id="definitions">
+    <summary>How each metric is defined</summary>
+    <dl>
+      <dt>Leg</dt><dd>One trip's movement from a source facility to a destination facility. Raw checkpoint rows are rolled up to legs.</dd>
+      <dt>Planned time (OSRM)</dt><dd>Drive time estimated by the OSRM routing engine for the leg's route, as provided in the dataset.</dd>
+      <dt>Within SLA</dt><dd>Actual transit time no more than the SLA factor times the planned time. The factor is a project setting (config.py), since the data has no promised date.</dd>
+      <dt>Actual vs planned time</dt><dd>Actual transit minutes divided by OSRM minutes. Medians are used because a few legs run over 10× plan.</dd>
+      <dt>Time at facilities</dt><dd>Start-scan-to-end-scan minutes minus actual transit minutes: loading, waiting and handling.</dd>
+      <dt>Avg extra min</dt><dd>Average actual transit minutes minus planned minutes.</dd>
+      <dt>Source</dt><dd>Delhivery's public trip dataset (Sep 12 – Oct 3, 2018), as used in public analytics case studies. Facility city, state and type are parsed from facility names.</dd>
+    </dl>
+  </details>
+</div>
+
+<script>
+  window.SC = {
+    GOOD: 0.60,
+    WARN: 0.45,
+    MIN_BAND_LEGS: 30,
+    parse: d3.utcParse('%Y-%m-%d'),
+    day: d3.utcFormat('%b %-d'),
+    pct(v, d = 1) { return v == null || isNaN(v) ? '—' : (v * 100).toFixed(d) + '%'; },
+    num(v) { return v == null || isNaN(v) ? '—' : Math.round(v).toLocaleString('en-IN'); },
+    where(s) { return String(s).replace(/%/g, '%25').replace(/&/g, '%26').replace(/=/g, '%3D'); },
+    pill(v) { return v >= SC.GOOD ? 'ok' : v >= SC.WARN ? 'warn' : 'bad'; },
+    tone(v) { return v >= SC.GOOD ? 'var(--color-ok)' : v >= SC.WARN ? 'var(--color-warn)' : 'var(--color-bad)'; },
+    row0(id) { const d = dash.data(id); return d.status === 'ok' && d.data && d.data.length ? d.data[0] : null; },
+    state(el, ...ids) {
+      const ds = ids.map((id) => dash.data(id));
+      if (ds.some((d) => d.status === 'error')) {
+        el.classList.remove('dash-skeleton');
+        el.textContent = "This part couldn't load its data. Open Sources to see why.";
+        return null;
+      }
+      if (ds.some((d) => d.status !== 'ok' || !d.data)) {
+        if (!ds.some((d) => d.status === 'loading')) el.classList.remove('dash-skeleton');
+        if (!el.classList.contains('dash-skeleton')) el.textContent = '—';
+        return null;
+      }
+      el.classList.remove('dash-skeleton');
+      return ds.map((d) => d.data);
+    },
+    tip(el) {
+      const t = document.createElement('div');
+      t.className = 'sc-tip'; t.hidden = true; el.appendChild(t);
+      return {
+        show(lines, px, py) {
+          t.replaceChildren(...lines.map(([k, v, c]) => {
+            const row = document.createElement('div'); row.className = 'sc-tip-row';
+            if (c) { const s = document.createElement('i'); s.className = 'sc-sw'; s.style.background = c; row.append(s); }
+            const a = document.createElement('span'); a.textContent = k; row.append(a);
+            if (v != null) { const b = document.createElement('b'); b.textContent = v; row.append(b); }
+            return row;
+          }));
+          t.hidden = false;
+          const w = t.offsetWidth, h = t.offsetHeight, W = el.clientWidth;
+          let L = px + 14; if (L + w > W) L = px - w - 14; L = Math.max(0, L);
+          let T = py - h - 10; if (T < 0) T = py + 14;
+          t.style.left = L + 'px'; t.style.top = T + 'px';
+        },
+        hide() { t.hidden = true; },
+      };
+    },
+    mark(node, source, field, where) {
+      node.setAttribute('data-source', source);
+      node.setAttribute('data-field', field);
+      if (where) node.setAttribute('data-where', where);
+      return node;
+    },
+    yAxis(svg, y, ticks, fmt, H, m, W) {
+      const g = svg.append('g').attr('class', 'sc-axis');
+      g.call(d3.axisLeft(y).ticks(ticks).tickFormat(fmt));
+      m.l = d3.max(g.selectAll('text').nodes(), (n) => n.getComputedTextLength()) + 12;
+      g.attr('transform', `translate(${m.l},0)`).call(d3.axisLeft(y).ticks(ticks).tickFormat(fmt).tickSize(-(W - m.l - m.r)).tickPadding(8))
+        .call((s) => s.select('.domain').remove());
+      return g;
+    },
+  };
+  document.querySelectorAll('[data-series]').forEach((sw) => { sw.style.background = dash.colors[+sw.getAttribute('data-series')]; });
+</script>
+
+<script>
+  // ---- Takeaway, source line and tiles ----
+  const put = (el, t) => { el.textContent = t; };
+  const factor = () => { const r = SC.row0('overall'); return r ? `${(+r.sla_factor).toFixed(1).replace(/\.0$/, '')}×` : '—'; };
+  dash.draw('lede-sla', (el) => { const r = SC.row0('overall'); put(el, r ? SC.pct(+r.sla_rate) : '—'); });
+  dash.draw('lede-legs', (el) => { const r = SC.row0('overall'); put(el, r ? SC.num(+r.legs) : '—'); });
+  dash.draw('lede-factor', (el) => put(el, factor()));
+  dash.draw('win-factor', (el) => put(el, factor()));
+  dash.draw('tile-factor', (el) => put(el, factor()));
+  dash.draw('lede-ratio', (el) => { const r = SC.row0('overall'); put(el, r ? (+r.median_delay_ratio).toFixed(2) + '×' : '—'); });
+  const routeRate = (t) => { const d = dash.data('route_type'); const r = d.status === 'ok' ? d.data.find((x) => x.route_type === t) : null; return r ? SC.pct(+r.sla_rate) : '—'; };
+  dash.draw('lede-cart', (el) => put(el, routeRate('Carting')));
+  dash.draw('lede-ftl', (el) => put(el, routeRate('FTL')));
+  const extremeState = (best) => {
+    const d = dash.data('state');
+    if (d.status !== 'ok' || !d.data.length) return null;
+    return d.data.reduce((a, b) => ((+b.sla_rate > +a.sla_rate) === best ? b : a));
+  };
+  const stateMark = (el, best, field) => {
+    const r = extremeState(best);
+    if (!r) { put(el, '—'); return; }
+    const s = SC.mark(document.createElement('span'), 'state', field, 'state=' + SC.where(r.state));
+    s.textContent = field === 'state' ? r.state : SC.pct(+r.sla_rate, 0);
+    el.replaceChildren(s);
+  };
+  dash.draw('lede-worst', (el) => stateMark(el, false, 'state'));
+  dash.draw('lede-worst-rate', (el) => stateMark(el, false, 'sla_rate'));
+  dash.draw('lede-best', (el) => stateMark(el, true, 'state'));
+  dash.draw('lede-best-rate', (el) => stateMark(el, true, 'sla_rate'));
+  dash.draw('win-range', (el) => {
+    const r = SC.row0('overall');
+    put(el, r ? `${d3.utcFormat('%b %-d')(SC.parse(r.first_date))} to ${d3.utcFormat('%b %-d, %Y')(SC.parse(r.last_date))}` : '—');
+  });
+
+  const TILE = {
+    sla_rate: (v) => SC.pct(v),
+    median_delay_ratio: (v) => v.toFixed(2) + '×',
+    legs: (v) => SC.num(v),
+    planned_km: (v) => (v / 1e5).toFixed(1) + ' lakh km',
+    avg_handling_min: (v) => Math.round(v) + ' min',
+    ftl_share: (v) => SC.pct(v, 0),
+  };
+  dash.draw('tile', (el) => {
+    if (dash.data('overall').status === 'loading') return;
+    el.classList.remove('dash-skeleton');
+    const r = SC.row0('overall'), f = el.getAttribute('data-field');
+    put(el, r && TILE[f] ? TILE[f](+r[f]) : '—');
+  });
+  dash.draw('tile-trips', (el) => { const r = SC.row0('overall'); put(el, r ? SC.num(+r.trips) : '—'); });
+  dash.draw('tile-inter', (el) => { const r = SC.row0('overall'); put(el, r ? SC.pct(+r.interstate_share, 0) : '—'); });
+  dash.draw('thresholds', (el) => put(el, `green ${SC.pct(SC.GOOD, 0)}+, amber ${SC.pct(SC.WARN, 0)}–${SC.pct(SC.GOOD, 0)}, red below ${SC.pct(SC.WARN, 0)}`));
+  dash.draw('min-band', (el) => put(el, String(SC.MIN_BAND_LEGS)));
+</script>
+
+<script>
+  // ---- Daily chart ----
+  dash.draw('daily', (el) => {
+    const st = SC.state(el, 'daily');
+    if (!st) return;
+    const rows = st[0].map((r) => ({ d: SC.parse(r.date), sla: +r.sla_rate, legs: +r.legs, ratio: +r.median_delay_ratio, ftl: +r.ftl_share })).sort((a, b) => a.d - b.d);
+    el.replaceChildren();
+    const W = el.clientWidth, H = 250, m = { t: 12, r: 44, b: 28, l: 0 };
+    const svg = d3.select(el).append('svg').attr('width', W).attr('height', H).attr('role', 'img').attr('aria-label', 'Daily share of legs within SLA');
+    const y = d3.scaleLinear().domain([0.3, 0.7]).range([H - m.b, m.t]);
+    SC.yAxis(svg, y, 4, d3.format('.0%'), H, m, W);
+    const x = d3.scaleBand().domain(rows.map((r) => +r.d)).range([m.l, W - m.r]).padding(0.3);
+    const y2 = d3.scaleLinear().domain([0, d3.max(rows, (r) => r.legs) * 1.6]).range([H - m.b, m.t]);
+    svg.append('g').attr('class', 'sc-axis').attr('transform', `translate(${W - m.r},0)`)
+      .call(d3.axisRight(y2).ticks(3).tickFormat(d3.format('~s')).tickSize(0).tickPadding(8)).call((g) => g.select('.domain').remove());
+    svg.append('g').selectAll('rect').data(rows).join('rect')
+      .attr('x', (r) => x(+r.d)).attr('width', x.bandwidth()).attr('y', (r) => y2(r.legs)).attr('height', (r) => y2(0) - y2(r.legs))
+      .style('fill', 'var(--cds-chart-muted)').style('opacity', 0.45);
+    const every = W < 560 ? 7 : 3;
+    svg.append('g').attr('class', 'sc-axis').attr('transform', `translate(0,${H - m.b})`)
+      .call(d3.axisBottom(x).tickValues(rows.filter((r, i) => i % every === 0).map((r) => +r.d)).tickFormat((v) => SC.day(new Date(v))).tickSize(0).tickPadding(10))
+      .call((g) => g.select('.domain').remove());
+    const cx = (r) => x(+r.d) + x.bandwidth() / 2;
+    svg.append('path').datum(rows).attr('d', d3.line().x(cx).y((r) => y(r.sla)))
+      .style('fill', 'none').style('stroke', dash.colors[0]).style('stroke-width', 2);
+    svg.append('g').selectAll('circle').data(rows).join('circle').attr('cx', cx).attr('cy', (r) => y(r.sla)).attr('r', 3).style('fill', dash.colors[0]);
+    const tip = SC.tip(el);
+    const guide = svg.append('line').attr('class', 'sc-guide').attr('y1', m.t).attr('y2', H - m.b).style('visibility', 'hidden');
+    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).style('fill', 'transparent')
+      .on('pointermove', (ev) => {
+        const [px] = d3.pointer(ev);
+        const r = rows[d3.leastIndex(rows, (q) => Math.abs(cx(q) - px))];
+        guide.attr('x1', cx(r)).attr('x2', cx(r)).style('visibility', 'visible');
+        tip.show([[d3.utcFormat('%a %b %-d, %Y')(r.d)], ['Within SLA', SC.pct(r.sla), dash.colors[0]], ['Legs', SC.num(r.legs)], ['Median actual vs plan', r.ratio.toFixed(2) + '×'], ['FTL share', SC.pct(r.ftl, 0)]], cx(r), y(r.sla));
+      })
+      .on('pointerleave', () => { guide.style('visibility', 'hidden'); tip.hide(); });
+  });
+
+  // ---- Route type table ----
+  dash.draw('route-rows', (tb) => {
+    const d = dash.data('route_type');
+    if (d.status !== 'ok') { tb.replaceChildren(); return; }
+    tb.replaceChildren(...d.data.slice().sort((a, b) => +b.sla_rate - +a.sla_rate).map((r) => {
+      const tr = document.createElement('tr');
+      const td = (t, cls) => { const c = document.createElement('td'); if (cls) c.className = cls; c.textContent = t; tr.append(c); return c; };
+      td(r.route_type, 'l'); td(SC.num(+r.legs));
+      const c = document.createElement('td'); const p = document.createElement('span'); p.className = 'sc-pill ' + SC.pill(+r.sla_rate); p.textContent = SC.pct(+r.sla_rate); c.append(p); tr.append(c);
+      td(SC.num(+r.median_actual_time_min)); td(SC.num(+r.median_osrm_time_min)); td((+r.avg_distance_km).toFixed(0)); td(SC.num(+r.avg_handling_min));
+      return tr;
+    }));
+  });
+
+  // ---- Distance band grouped bars ----
+  dash.draw('bands', (el) => {
+    const st = SC.state(el, 'distance_band');
+    if (!st) return;
+    const rows = st[0].filter((r) => +r.legs >= SC.MIN_BAND_LEGS).map((r) => ({ band: r.distance_band, order: +r.band_order, type: r.route_type, sla: +r.sla_rate, legs: +r.legs, ratio: +r.median_delay_ratio }));
+    const bands = [...new Map(rows.sort((a, b) => a.order - b.order).map((r) => [r.band, r.order])).keys()];
+    el.replaceChildren();
+    const W = el.clientWidth, H = 250, m = { t: 12, r: 8, b: 28, l: 0 };
+    const svg = d3.select(el).append('svg').attr('width', W).attr('height', H).attr('role', 'img').attr('aria-label', 'Share of legs within SLA by planned distance and route type');
+    const y = d3.scaleLinear().domain([0, 0.8]).range([H - m.b, m.t]);
+    SC.yAxis(svg, y, 4, d3.format('.0%'), H, m, W);
+    const x = d3.scaleBand().domain(bands).range([m.l, W - m.r]).padding(0.25);
+    const types = ['FTL', 'Carting'];
+    const xi = d3.scaleBand().domain(types).range([0, x.bandwidth()]).padding(0.08);
+    svg.append('g').attr('class', 'sc-axis').attr('transform', `translate(0,${H - m.b})`)
+      .call(d3.axisBottom(x).tickSize(0).tickPadding(10).tickFormat((b) => (W < 460 ? b.replace(' km', '') : b))).call((g) => g.select('.domain').remove());
+    const tip = SC.tip(el);
+    svg.append('g').selectAll('rect').data(rows).join('rect')
+      .attr('x', (r) => x(r.band) + xi(r.type)).attr('width', xi.bandwidth()).attr('y', (r) => y(r.sla)).attr('height', (r) => y(0) - y(r.sla))
+      .style('fill', (r) => dash.colors[types.indexOf(r.type)])
+      .on('pointermove', (ev, r) => tip.show([[`${r.band} · ${r.type}`], ['Within SLA', SC.pct(r.sla)], ['Legs', SC.num(r.legs)], ['Median actual vs plan', r.ratio.toFixed(2) + '×']], x(r.band) + xi(r.type) + xi.bandwidth() / 2, y(r.sla)))
+      .on('pointerleave', () => tip.hide());
+  });
+
+  // ---- Start hour ----
+  dash.draw('hours', (el) => {
+    const st = SC.state(el, 'hour', 'overall');
+    if (!st) return;
+    const rows = st[0].map((r) => ({ h: +r.hour, sla: +r.sla_rate, legs: +r.legs })).sort((a, b) => a.h - b.h);
+    const all = +st[1][0].sla_rate;
+    el.replaceChildren();
+    const W = el.clientWidth, H = 240, m = { t: 14, r: 8, b: 28, l: 0 };
+    const svg = d3.select(el).append('svg').attr('width', W).attr('height', H).attr('role', 'img').attr('aria-label', 'Share of legs within SLA by start hour');
+    const y = d3.scaleLinear().domain([0, 0.8]).range([H - m.b, m.t]);
+    SC.yAxis(svg, y, 4, d3.format('.0%'), H, m, W);
+    const x = d3.scaleBand().domain(rows.map((r) => r.h)).range([m.l, W - m.r]).padding(0.2);
+    svg.append('g').attr('class', 'sc-axis').attr('transform', `translate(0,${H - m.b})`)
+      .call(d3.axisBottom(x).tickValues(rows.filter((r) => r.h % (W < 520 ? 6 : 3) === 0).map((r) => r.h)).tickFormat((h) => String(h).padStart(2, '0') + ':00').tickSize(0).tickPadding(10))
+      .call((g) => g.select('.domain').remove());
+    const tip = SC.tip(el);
+    svg.append('g').selectAll('rect').data(rows).join('rect')
+      .attr('x', (r) => x(r.h)).attr('width', x.bandwidth()).attr('y', (r) => y(r.sla)).attr('height', (r) => y(0) - y(r.sla))
+      .style('fill', dash.colors[0]).style('fill-opacity', (r) => (r.sla < all ? 0.55 : 1))
+      .on('pointermove', (ev, r) => tip.show([[`Starts ${String(r.h).padStart(2, '0')}:00–${String(r.h).padStart(2, '0')}:59`], ['Within SLA', SC.pct(r.sla)], ['Legs', SC.num(r.legs)]], x(r.h) + x.bandwidth() / 2, y(r.sla)))
+      .on('pointerleave', () => tip.hide());
+    svg.append('line').attr('class', 'sc-ref').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(all)).attr('y2', y(all)).style('pointer-events', 'none');
+    svg.append('text').attr('class', 'sc-ref-label').attr('x', W - m.r).attr('y', y(all) - 6).attr('text-anchor', 'end').text(`All legs ${SC.pct(all)}`);
+  });
+</script>
+
+<script>
+  // ---- States, corridors, hubs ----
+  dash.draw('states', (el) => {
+    const st = SC.state(el, 'state', 'overall');
+    if (!st) return;
+    const rows = st[0].slice().sort((a, b) => +b.sla_rate - +a.sla_rate);
+    const all = +st[1][0].sla_rate;
+    el.replaceChildren(...rows.map((r) => {
+      const w = 'state=' + SC.where(r.state);
+      const row = document.createElement('div'); row.className = 'sc-bar-row';
+      const l = document.createElement('span'); l.className = 'sc-bar-label'; l.textContent = r.state;
+      const track = document.createElement('span'); track.className = 'sc-bar-track';
+      const fill = document.createElement('span'); fill.className = 'sc-bar-fill';
+      fill.style.width = (+r.sla_rate * 100) + '%'; fill.style.background = SC.tone(+r.sla_rate);
+      const ref = document.createElement('span'); ref.className = 'sc-bar-ref'; ref.style.left = (all * 100) + '%';
+      track.append(fill, ref);
+      const v = document.createElement('span'); v.className = 'sc-bar-val';
+      const pv = SC.mark(document.createElement('span'), 'state', 'sla_rate', w); pv.textContent = SC.pct(+r.sla_rate, 0);
+      const sub = document.createElement('div'); sub.className = 'sc-bar-sub';
+      const n = SC.mark(document.createElement('span'), 'state', 'legs', w); n.textContent = SC.num(+r.legs);
+      sub.append(n); v.append(pv, sub);
+      row.append(l, track, v);
+      return row;
+    }));
+  });
+
+  const pillCell = (tr, v) => { const c = document.createElement('td'); const p = document.createElement('span'); p.className = 'sc-pill ' + SC.pill(v); p.textContent = SC.pct(v); c.append(p); tr.append(c); };
+  dash.draw('corridor-rows', (tb) => {
+    const d = dash.data('corridor');
+    if (d.status !== 'ok') { tb.replaceChildren(); return; }
+    tb.replaceChildren(...d.data.slice().sort((a, b) => +b.legs - +a.legs).map((r) => {
+      const tr = document.createElement('tr');
+      tr.setAttribute('data-key', SC.where(r.source_state).replace(/,/g, '%2C') + ',' + SC.where(r.destination_state).replace(/,/g, '%2C'));
+      const td = (t, cls) => { const c = document.createElement('td'); if (cls) c.className = cls; c.textContent = t; tr.append(c); };
+      td(r.source_state, 'l'); td(r.destination_state, 'l'); td(SC.num(+r.legs)); pillCell(tr, +r.sla_rate);
+      td((+r.avg_distance_km).toFixed(0)); td(SC.num(+r.avg_excess_min));
+      return tr;
+    }));
+  });
+
+  dash.draw('hub-rows', (tb) => {
+    const d = dash.data('hub');
+    if (d.status !== 'ok') { tb.replaceChildren(); return; }
+    tb.replaceChildren(...d.data.slice().sort((a, b) => +a.sla_rate - +b.sla_rate).map((r) => {
+      const tr = document.createElement('tr');
+      const td = (t, cls) => { const c = document.createElement('td'); if (cls) c.className = cls; c.textContent = t; tr.append(c); };
+      td(r.facility, 'l'); td(r.facility_type, 'l'); td(SC.num(+r.legs)); pillCell(tr, +r.sla_rate);
+      td(SC.num(+r.avg_excess_min)); td(SC.num(+r.avg_handling_min));
+      return tr;
+    }));
+  });
+
+  // ---- Model ----
+  dash.draw('drivers', (el) => {
+    const st = SC.state(el, 'risk_drivers');
+    if (!st) return;
+    const rows = st[0].slice(0, 12);
+    const maxLog = d3.max(rows, (r) => Math.abs(Math.log(+r.odds_ratio))) || 1;
+    el.replaceChildren(...rows.map((r) => {
+      const or = +r.odds_ratio, frac = Math.abs(Math.log(or)) / maxLog / 2;
+      const row = document.createElement('div'); row.className = 'sc-bar-row';
+      const l = document.createElement('span'); l.className = 'sc-bar-label'; l.textContent = r.feature;
+      const track = document.createElement('span'); track.className = 'sc-bar-track';
+      const mid = document.createElement('span'); mid.className = 'sc-div-mid';
+      const fill = document.createElement('span'); fill.className = 'sc-bar-fill';
+      fill.style.width = frac * 100 + '%'; fill.style.left = or >= 1 ? '50%' : (50 - frac * 100) + '%';
+      fill.style.background = or >= 1 ? 'var(--color-bad)' : 'var(--color-ok)';
+      track.append(fill, mid);
+      const v = SC.mark(document.createElement('span'), 'risk_drivers', 'odds_ratio', 'feature=' + SC.where(r.feature));
+      v.className = 'sc-bar-val'; v.textContent = or.toFixed(2) + '×';
+      row.append(l, track, v);
+      return row;
+    }));
+  });
+  const metric = (name) => { const d = dash.data('model_metrics'); if (d.status !== 'ok') return null; const r = d.data.find((x) => x.metric === name); return r ? r.value : null; };
+  const isoToDay = (s) => s.replace(/(\d{4})-(\d{2})-(\d{2})/, (x) => d3.utcFormat('%b %-d, %Y')(SC.parse(x)));
+  dash.draw('mm-base', (el) => { const v = metric('baseline'); el.textContent = v || '—'; });
+  dash.draw('mm-train', (el) => { const v = metric('train_period'); el.textContent = v ? isoToDay(v) : '—'; });
+  dash.draw('mm-test', (el) => { const v = metric('test_period'); el.textContent = v ? isoToDay(v) : '—'; });
+  dash.draw('mm-auc', (el) => { const v = metric('roc_auc'); el.textContent = v ? (+v).toFixed(2) : '—'; });
+  dash.draw('mm-top', (el) => { const v = metric('top_decile_breach_rate'); el.textContent = v ? SC.pct(+v, 0) : '—'; });
+  dash.draw('mm-rate', (el) => { const v = metric('test_breach_rate'); el.textContent = v ? SC.pct(+v, 0) : '—'; });
+</script>
